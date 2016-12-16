@@ -1,0 +1,3080 @@
+[
+  {
+    "type": "tab",
+    "id": "828b2334.7d74e",
+    "label": "Data"
+  },
+  {
+    "type": "tab",
+    "id": "dca3a3aa.29d59",
+    "label": "Registration"
+  },
+  {
+    "type": "tab",
+    "id": "ff4604e.3bd1ef8",
+    "label": "Virtual Device"
+  },
+  {
+    "type": "tab",
+    "id": "2a0a0053.68754",
+    "label": "Trigger"
+  },
+  {
+    "type": "tab",
+    "id": "edd8f490.1384b8",
+    "label": "Flow 1"
+  },
+  {
+    "id": "d012b668.0e6b48",
+    "type": "subflow",
+    "name": "VirtualData",
+    "info": "",
+    "in": [
+      {
+        "x": 78,
+        "y": 103,
+        "wires": [
+          {
+            "id": "c25b483b.073eb8"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 413,
+        "y": 98,
+        "wires": [
+          {
+            "id": "c25b483b.073eb8",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "d6754866.b25de8",
+    "type": "subflow",
+    "name": "Get M2X Device",
+    "info": "",
+    "in": [
+      {
+        "x": 64,
+        "y": 101,
+        "wires": [
+          {
+            "id": "8832b00b.f292c"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 718,
+        "y": 112,
+        "wires": [
+          {
+            "id": "abbf1662.c240f8",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "3a19c365.ec522c",
+    "type": "subflow",
+    "name": "Register Check",
+    "info": "",
+    "in": [
+      {
+        "x": 46,
+        "y": 79,
+        "wires": [
+          {
+            "id": "d5b80e23.d7aec"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 1035.999984741211,
+        "y": 75,
+        "wires": [
+          {
+            "id": "f3ee5b81.0e4cc8",
+            "port": 0
+          },
+          {
+            "id": "259d311c.16b58e",
+            "port": 0
+          }
+        ]
+      },
+      {
+        "x": 186.99998474121094,
+        "y": 294.0000228881836,
+        "wires": [
+          {
+            "id": "aafe8d98.1fd0a",
+            "port": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "146e5987.6ab216",
+    "type": "subflow",
+    "name": "CC Auth Encode",
+    "info": "",
+    "in": [
+      {
+        "x": 103.74999809265137,
+        "y": 110.00000381469727,
+        "wires": [
+          {
+            "id": "5fc7b6a7.ad5a48"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 539.9999885559082,
+        "y": 108.75000381469727,
+        "wires": [
+          {
+            "id": "46f42f02.48344",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "7ddfd805.46bfe8",
+    "type": "subflow",
+    "name": "Parse Key-Value Pairs",
+    "info": "",
+    "in": [
+      {
+        "x": 202.22221851348877,
+        "y": 126.6666612625122,
+        "wires": [
+          {
+            "id": "bda6b0b0.4ea2c"
+          }
+        ]
+      }
+    ],
+    "out": [
+      {
+        "x": 532.222204208374,
+        "y": 130.00000190734863,
+        "wires": [
+          {
+            "id": "bda6b0b0.4ea2c",
+            "port": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "68544f62.97abb",
+    "type": "flow server",
+    "hosted": true,
+    "name": "flow",
+    "flowFile": "flow.json",
+    "configFile": "config.json"
+  },
+  {
+    "id": "fa6df2fa.69e0b",
+    "type": "m2x feed",
+    "z": "edd8f490.1384b8",
+    "apiKey": "",
+    "name": "my account"
+  },
+  {
+    "id": "843b5498.319c9",
+    "type": "http in",
+    "z": "828b2334.7d74e",
+    "name": "Climate POST",
+    "url": "/climate",
+    "method": "post",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 107.3499755859375,
+    "y": 245.60002517700195,
+    "wires": [
+      [
+        "cb554451.c15e18",
+        "aadd913e.ba58b8"
+      ]
+    ]
+  },
+  {
+    "id": "aadd913e.ba58b8",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "Calculate Heat Index",
+    "func": "msg.payload.tempF = msg.payload.temp * 1.8 + 32;\n\nvar HI;\nvar T = msg.payload.tempF;\nvar RH = msg.payload.humidity;\n\nvar t2=Math.pow(T, 2);\nvar t3=Math.pow(T, 3);\nvar rh2=Math.pow(RH, 2);\nvar rh3=Math.pow(RH, 3);\n\n//less accurate formula (var index=-42.379 + 2.04901523*t + 10.14333127*r - 0.22475541*t*r - 6.83783e-03*t2 - 5.481717e-02*rh2 + 1.22874e-03*t2*r + 8.5282e-04*t*rh2 - 1.99e-06*t2*rh2;)\nvar HI =16.923+0.185212*T+5.37941*RH-0.100254*T*RH+0.941695e-2*t2+0.728898e-2*rh2+0.345372e-3*t2*RH-0.814971e-3*T*rh2+0.102102e-4*t2*rh2-0.38646e-4*t3+0.291583e-4*rh3+0.142721e-5*t3*RH+0.197483e-6*T*rh3-0.218429e-7*t3*rh2+ 0.843296e-9*t2*rh3-0.481975e-10*t3*rh3;\n\nHI = Math.round(HI*100)/100;\n\nmsg.payload.heatIndexF = HI;\nmsg.payload.heatIndex = (T - 32) / 1.8;\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 539.2000732421875,
+    "y": 337.20001220703125,
+    "wires": [
+      [
+        "4ddb6902.4d65e8",
+        "4da56a78.d88c04"
+      ]
+    ]
+  },
+  {
+    "id": "f2ba835d.f15d8",
+    "type": "udp in",
+    "z": "828b2334.7d74e",
+    "name": "Cimate",
+    "iface": "",
+    "port": 3000,
+    "ipv": "udp4",
+    "multicast": "false",
+    "group": "",
+    "datatype": "buffer",
+    "x": 90.01663208007812,
+    "y": 440.19997145217144,
+    "wires": [
+      [
+        "c69b666b.6ee328"
+      ]
+    ]
+  },
+  {
+    "id": "e623d4ac.ab78a8",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "at m2x",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 822.1701126098633,
+    "y": 248.61116409301758,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "b5882a69.afe6f8",
+    "type": "inject",
+    "z": "828b2334.7d74e",
+    "name": "Startup",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": true,
+    "x": 119.17361450195312,
+    "y": 99.31597137451172,
+    "wires": [
+      [
+        "8310d36c.89f88"
+      ]
+    ]
+  },
+  {
+    "id": "8310d36c.89f88",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "Set Start",
+    "func": "//global context is shared across all flows\n//persists until the project restarts or is redeployed\n\nglobal.set('start',msg.payload);\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 296.1839904785156,
+    "y": 47.25346755981445,
+    "wires": [
+      [
+        "136090b4.323d4f"
+      ]
+    ]
+  },
+  {
+    "id": "1c110769.2f8279",
+    "type": "comment",
+    "z": "828b2334.7d74e",
+    "name": "Initialize Flow",
+    "info": "",
+    "x": 106.17361450195312,
+    "y": 40.142364501953125,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "ad9071d1.a3e55",
+    "type": "comment",
+    "z": "828b2334.7d74e",
+    "name": "Device Sensor Endpoints",
+    "info": "",
+    "x": 126.18403625488281,
+    "y": 179.14238739013672,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "bf109f89.fb686",
+    "type": "inject",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Sensor Reading",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 124.18405151367188,
+    "y": 101.97224426269531,
+    "wires": [
+      [
+        "51647013.cc8ca"
+      ]
+    ]
+  },
+  {
+    "id": "73b3da71.6cece4",
+    "type": "http request",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Climate",
+    "method": "POST",
+    "ret": "txt",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 521.1805725097656,
+    "y": 103.70835876464844,
+    "wires": [
+      [
+        "abf5b86c.7eaac8"
+      ]
+    ]
+  },
+  {
+    "id": "abf5b86c.7eaac8",
+    "type": "debug",
+    "z": "ff4604e.3bd1ef8",
+    "name": "http request",
+    "active": false,
+    "console": "false",
+    "complete": "payload",
+    "x": 728.1771545410156,
+    "y": 107.388916015625,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "cb554451.c15e18",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "http-in",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 201.1771240234375,
+    "y": 292.39933013916016,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "1d675a1d.cb9bb6",
+    "type": "inject",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Initialize",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 121.54861450195312,
+    "y": 612.8924140930176,
+    "wires": [
+      [
+        "eee209ca.7f58e8"
+      ]
+    ]
+  },
+  {
+    "id": "eee209ca.7f58e8",
+    "type": "function",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Data to Send",
+    "func": "msg.payload = {\n    \"name\": global.get(\"name\"),\n    \"description\": global.get(\"description\"),\n    \"tags\": global.get(\"tags\"),\n    \"visibility\": global.get(\"visibility\"),\n    \"metadata\": {},\n    \"serial\": global.get(\"serial\")\n}\nmsg.url = global.get(\"Register\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 322.5382080078125,
+    "y": 613.8472785949707,
+    "wires": [
+      [
+        "46371adc.7b5074",
+        "9b68d03e.b4628"
+      ]
+    ]
+  },
+  {
+    "id": "9b68d03e.b4628",
+    "type": "debug",
+    "z": "ff4604e.3bd1ef8",
+    "name": "data",
+    "active": true,
+    "console": "false",
+    "complete": "true",
+    "x": 524.5346984863281,
+    "y": 668.3125877380371,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "2012f90.f155608",
+    "type": "debug",
+    "z": "ff4604e.3bd1ef8",
+    "name": "post request",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 708.5416564941406,
+    "y": 614.3090476989746,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "46371adc.7b5074",
+    "type": "http request",
+    "z": "ff4604e.3bd1ef8",
+    "name": "",
+    "method": "POST",
+    "ret": "txt",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 518.5451354980469,
+    "y": 614.6285285949707,
+    "wires": [
+      [
+        "2012f90.f155608"
+      ]
+    ]
+  },
+  {
+    "id": "30182977.730936",
+    "type": "http in",
+    "z": "dca3a3aa.29d59",
+    "name": "Register",
+    "url": "/register",
+    "method": "post",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 124.66319274902344,
+    "y": 91.8680648803711,
+    "wires": [
+      [
+        "b21405df.00f8a8"
+      ]
+    ]
+  },
+  {
+    "id": "95df9407.f4a3c8",
+    "type": "debug",
+    "z": "dca3a3aa.29d59",
+    "name": "register",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 523.6666870117188,
+    "y": 37.611106872558594,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "e45aeb0f.6538b8",
+    "type": "http response",
+    "z": "dca3a3aa.29d59",
+    "name": "",
+    "x": 760.6597290039062,
+    "y": 212.17365264892578,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "136090b4.323d4f",
+    "type": "metadata",
+    "z": "828b2334.7d74e",
+    "name": "",
+    "x": 459.65625,
+    "y": 46.03820037841797,
+    "wires": [
+      [
+        "33bcd9d0.3b3346"
+      ]
+    ]
+  },
+  {
+    "id": "efe4775b.6561e8",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "Configuration",
+    "func": "// configure with your specific keys, username, and URL\n\nglobal.set('M2X-Key','8dd47dd3b7e35d1c5791a9fb52ba888c');\n\n// for the virtual starter kit or default values\n//global.set(\"deviceID\",'<get from M2X>');\nglobal.set(\"defaultserial\",'vstarterkit001');\nglobal.set(\"serial\",global.get(\"defaultserial\"));\nglobal.set(\"name\",\"Virtual Starter Kit\");\nglobal.set(\"description\",\"A virtual implementation of the Starter Kit for testing the data streams.\");\nglobal.set(\"tags\",\"starter-kit, virtual\");\nglobal.set(\"visibility\",\"private\");\n\n// reporting incorrect URLs\n/*for(var key in msg.payload) {\n    var item = msg.payload[key];\n    global.set(item.name,item.url);\n    data[item.name] = item.url;\n}*/\n// temp solution\nvar base_hostname = \"run-east.att.io\" // get from Endpoints after 1st Deploy\nvar base_uri = \"/1927af3b202de/87aee9e78e53/812734d6adb7168/in/flow\"\nvar base_url = \"https://\" + base_hostname + base_uri;\nglobal.set(\"Climate\",base_url+\"/climate\");\nglobal.set(\"ClimateUDP_IP\",base_hostname);\nglobal.set(\"ClimateUDP_Port\",34041); // get from Endpoints after 1st Deploy\nglobal.set(\"Register\",base_url+\"/register\");\nglobal.set(\"Trigger\",base_url+\"/trigger\");\nglobal.set(\"Command\",base_url+\"/command\");\nglobal.set(\"Poll\",base_url+\"/poll\");\n\n// Control Center credentials\nglobal.set(\"CCBaseURL\",\"https://rws-api.jasper.com/rws/api/v1/\");\nglobal.set(\"CCuser\",\"coolioxlr\");\nglobal.set(\"CCkey\",\"2947492c-b087-46cf-93fc-452307013c89\");\nglobal.set(\"ICCID\",\"89011704252314439420\");\n\nvar data = {\n    \"start\": global.get(\"start\"),\n    \"M2X-Key\": global.get(\"M2X-Key\")\n};\n\nmsg.payload = data;\nreturn msg;\n\n",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 613.6562347412109,
+    "y": 102.14583587646484,
+    "wires": [
+      [
+        "49c67e1.ecc9d8"
+      ]
+    ]
+  },
+  {
+    "id": "49c67e1.ecc9d8",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "startup",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 801.3402709960938,
+    "y": 102.8923568725586,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "33bcd9d0.3b3346",
+    "type": "json",
+    "z": "828b2334.7d74e",
+    "name": "",
+    "x": 414.2396240234375,
+    "y": 103.70487213134766,
+    "wires": [
+      [
+        "efe4775b.6561e8"
+      ]
+    ]
+  },
+  {
+    "id": "8441e01c.f2b98",
+    "type": "inject",
+    "z": "ff4604e.3bd1ef8",
+    "name": "manual values - reset",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 117.23612976074219,
+    "y": 152.97919464111328,
+    "wires": [
+      [
+        "8b1b39c6.5aa6f8"
+      ]
+    ]
+  },
+  {
+    "id": "8b1b39c6.5aa6f8",
+    "type": "function",
+    "z": "ff4604e.3bd1ef8",
+    "name": "reset",
+    "func": "global.set(\"temp\",26); // celcius\nglobal.set(\"humidity\",83);\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 319.22918701171875,
+    "y": 155.26392364501953,
+    "wires": [
+      [
+        "51647013.cc8ca"
+      ]
+    ]
+  },
+  {
+    "id": "a7cc948.65bc468",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "Calculate Heat Index - can you get it working?",
+    "func": "msg.payload.tempF = msg.payload.temp * 1.8 + 32;\n\nvar HI;\nvar T = msg.payload.tempF;\nvar RH = msg.payload.humidity/100;\n\n// http://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml\n\nHI = 0.5 * (T + 61.0 + ((T-68.0)*1.2) + (RH*0.094));\n\n/* if(HI >= 80) {\n    HI = -42.379 + 2.04901523*T + 10.14333127*RH - .22475541*T*RH - .00683783*T*T - .05481717*RH*RH + .00122874*T*T*RH + .00085282*T*RH*RH - .00000199*T*T*RH*RH;\n    if(RH < 13 && T >= 80 && T <= 112) {\n        HI -= ((13-RH)/4)*Math.sqrt((17-Math.abs(T-95))/17);\n    } else if(RH >= 85 && T >= 80 && T <= 87) {\n        HI += ((RH-85)/10) * ((87-T)/5)\n    }\n} */\n\nHI = Math.round(HI*100)/100;\n\nmsg.payload.indexF = HI;\nmsg.payload.index = (T - 32) / 1.8;\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 821.3402709960938,
+    "y": 175.89237213134766,
+    "wires": [
+      [
+
+      ]
+    ]
+  },
+  {
+    "id": "2c8bb750.f7b438",
+    "type": "comment",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Register this Device - only use once",
+    "info": "",
+    "x": 174.23959350585938,
+    "y": 560.8056259155273,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "a6fe7774.136c38",
+    "type": "debug",
+    "z": "dca3a3aa.29d59",
+    "name": "extract info",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 763.2361450195312,
+    "y": 153.08683013916016,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "ff94ed1a.b9a14",
+    "type": "function",
+    "z": "dca3a3aa.29d59",
+    "name": "Extract Device info",
+    "func": "var deviceID = msg.payload.id;\nvar serial = msg.payload.serial;\nvar key = msg.payload.key;\n\nglobal.set(\"deviceID\",deviceID);\nglobal.set(\"serial\", serial);\nglobal.set(\"deviceKey\",key);\n\n// typically, this would be stored in a data store somewhere else\nglobal.set(\"dict:serial:\"+deviceID, serial);\nglobal.set(\"dict:id:\"+serial, deviceID);\n\nmsg.payload = {\n    \"deviceID\": deviceID,\n    \"serial\": serial,\n    \"deviceKey\": key\n}\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 521.232666015625,
+    "y": 230.1424217224121,
+    "wires": [
+      [
+        "a6fe7774.136c38",
+        "51115a1.db7a6a4",
+        "e45aeb0f.6538b8"
+      ]
+    ]
+  },
+  {
+    "id": "db884774.bea118",
+    "type": "debug",
+    "z": "dca3a3aa.29d59",
+    "name": "m2x response",
+    "active": false,
+    "console": "false",
+    "complete": "payload",
+    "x": 838.3401336669922,
+    "y": 410.8923110961914,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "51115a1.db7a6a4",
+    "type": "function",
+    "z": "dca3a3aa.29d59",
+    "name": "M2X lead-in",
+    "func": "msg.headers = {\n    \"X-M2X-KEY\": global.get(\"M2X-Key\"),\n    \"content-type\": \"application/json\"\n};\n//msg.topic = \"devices\";\n//msg.action = \"updateStream\";\n//msg.topic_id = msg.payload.deviceID;\nmsg.url = \"https://api-m2x.att.com/v2/devices/\" + msg.payload.deviceID + \"/\";\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 164.34027099609375,
+    "y": 321.89237213134766,
+    "wires": [
+      [
+        "8ee96b4b.18b448",
+        "e7ed3778.b64da8",
+        "8486001d.43141",
+        "b13fcd55.36559"
+      ]
+    ]
+  },
+  {
+    "id": "8ee96b4b.18b448",
+    "type": "function",
+    "z": "dca3a3aa.29d59",
+    "name": "Set up Temp Stream",
+    "func": "msg.url += \"streams/temp\";\n\nmsg.payload = {\n    \"display_name\": \"Temperature\",\n    \"unit\": {\n        \"label\": \"degree Celsius\",\n        \"symbol\": \"°C\"\n    },\n    \"type\": \"numeric\"\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 384.34027099609375,
+    "y": 415.89231872558594,
+    "wires": [
+      [
+        "bed41f26.76a9c"
+      ]
+    ]
+  },
+  {
+    "id": "e7ed3778.b64da8",
+    "type": "function",
+    "z": "dca3a3aa.29d59",
+    "name": "Set up Humidity Stream",
+    "func": "msg.url += \"streams/humidity\";\n\nmsg.payload = {\n    \"display_name\": \"Humidity\",\n    \"unit\": {\n        \"label\": \"percentage\",\n        \"symbol\": \"%\"\n    },\n    \"type\": \"numeric\"\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 387.34027099609375,
+    "y": 370.8923645019531,
+    "wires": [
+      [
+        "bed41f26.76a9c"
+      ]
+    ]
+  },
+  {
+    "id": "8486001d.43141",
+    "type": "function",
+    "z": "dca3a3aa.29d59",
+    "name": "Set up Heat Index Stream",
+    "func": "//msg.sub_topic_id = \"heatIndex\";\nmsg.url += \"streams/heatIndex\";\nmsg.payload = {\n    \"display_name\": \"Heat Index\",\n    \"unit\": {\n        \"label\": \"degree Celsius\",\n        \"symbol\": \"°C\"\n    },\n    \"type\": \"numeric\"\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 397.34027099609375,
+    "y": 322.89234924316406,
+    "wires": [
+      [
+        "bed41f26.76a9c"
+      ]
+    ]
+  },
+  {
+    "id": "2e2ddedb.c570e2",
+    "type": "comment",
+    "z": "dca3a3aa.29d59",
+    "name": "Web Service for Device Registration",
+    "info": "Only needed one time over all.  Calling this\nservice will create a device in M2X along with\nthe necessary streams.  After its called once,\nset the values in the Configuration function\nnode.\n\nFor this to work you'll need to configure the\ntwo M2X nodes to use your M2X configuration,\nwhich consists of simply the M2X master key.",
+    "x": 178.24305725097656,
+    "y": 43.482635498046875,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "959fdbe5.9f9538",
+    "type": "comment",
+    "z": "dca3a3aa.29d59",
+    "name": "Extra New Device Info and Save to Context Variables",
+    "info": "This will populate the global context scope\nwith deviceID and deviceKey for this device.\n\nWatch the Debug panel for these values. They\ncan also be found in M2X itself.",
+    "x": 212.24305725097656,
+    "y": 178.1388816833496,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "6d36a811.816578",
+    "type": "comment",
+    "z": "dca3a3aa.29d59",
+    "name": "Set up New Streams",
+    "info": "",
+    "x": 135.23611450195312,
+    "y": 279.25,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "4da56a78.d88c04",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "M2X lead-in",
+    "func": "//Post multiple values to multiple streams example\n\nvar timestamp = msg.payload.timestamp || new Date().getTime();\ntimestamp = new Date(timestamp).toISOString();\n\n//msg.topic = \"devices\";\n//msg.action = \"postMultiple\";\n//msg.topic_id = msg.payload.deviceID || global.get(\"deviceID\");\nmsg.url = \"https://api-m2x.att.com/v2/devices/\";\nif(msg.payload.deviceID) {\n    var deviceID = msg.payload.deviceID || global.get(\"deviceID\");\n    msg.url += deviceID + \"/updates\";\n} else if(msg.payload.serial) {\n    msg.url += \"serial/\" + msg.payload.serial + \"/updates\";\n}\n\nmsg.headers = {\n    \"X-M2X-KEY\": global.get(\"M2X-Key\"),\n    \"content-type\": \"application/json\"\n};\n\nmsg.payload = {\n    \"values\": {\n    \"temp\": [\n        { \"timestamp\": timestamp, \"value\": msg.payload.temp  }],\n    \"humidity\": [\n        { \"timestamp\": timestamp, \"value\": msg.payload.humidity  }],\n    \"heatIndex\": [\n        { \"timestamp\": timestamp, \"value\": msg.payload.heatIndex  }],\n    \"accelX\": [\n        { \"timestamp\": timestamp, \"value\": msg.payload.accelX  }],\n    \"accelY\": [\n        { \"timestamp\": timestamp, \"value\": msg.payload.accelY  }],\n    \"accelZ\": [\n        { \"timestamp\": timestamp, \"value\": msg.payload.accelZ  }]\n    }\n};\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 719.2431335449219,
+    "y": 304.42362213134766,
+    "wires": [
+      [
+        "e623d4ac.ab78a8",
+        "d28b3f50.a99a8",
+        "25497871.c15828"
+      ]
+    ]
+  },
+  {
+    "id": "4ddb6902.4d65e8",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "heat index",
+    "active": false,
+    "console": "false",
+    "complete": "payload",
+    "x": 712.3402099609375,
+    "y": 447.2257080078125,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "4cb8e2ed.d6c6cc",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "m2x response",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 1029.2291564941406,
+    "y": 250.55902862548828,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "6a05023c.0e670c",
+    "type": "comment",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Send Sensor Data over HTTPS",
+    "info": "You will need to copy the endpoint from the\nClimate HTTP-IN node in the Data flow (see the\nEndpoints tab below) and use it to configure\nthe Climate HTTP-REQUEST node here.",
+    "x": 141.3194580078125,
+    "y": 47.08680725097656,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "47889ebf.219bc",
+    "type": "inject",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Sensor Reading",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 113.51040649414062,
+    "y": 303.89237213134766,
+    "wires": [
+      [
+        "f4746521.9c739"
+      ]
+    ]
+  },
+  {
+    "id": "cb0a19f7.8e8338",
+    "type": "udp out",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Climate",
+    "addr": "",
+    "iface": "",
+    "port": "",
+    "ipv": "udp4",
+    "outport": "",
+    "base64": false,
+    "multicast": "false",
+    "x": 798.09716796875,
+    "y": 301.28131103515625,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "d707667a.627b78",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "udp-in",
+    "active": false,
+    "console": "false",
+    "complete": "payload",
+    "x": 434.51039123535156,
+    "y": 442.89233137648785,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "c69b666b.6ee328",
+    "type": "base64",
+    "z": "828b2334.7d74e",
+    "name": "decode",
+    "method": "decode",
+    "x": 315.10069274902344,
+    "y": 442.8714904785156,
+    "wires": [
+      [
+        "d707667a.627b78",
+        "96644c3d.0334"
+      ]
+    ]
+  },
+  {
+    "id": "65a39d98.998ae4",
+    "type": "json",
+    "z": "ff4604e.3bd1ef8",
+    "name": "",
+    "x": 637.0867919921875,
+    "y": 300.09381103515625,
+    "wires": [
+      [
+        "cb0a19f7.8e8338"
+      ]
+    ]
+  },
+  {
+    "id": "96644c3d.0334",
+    "type": "json",
+    "z": "828b2334.7d74e",
+    "name": "",
+    "x": 301.0971984863281,
+    "y": 374.5277404785156,
+    "wires": [
+      [
+        "aadd913e.ba58b8"
+      ]
+    ]
+  },
+  {
+    "id": "6a38aa7e.505c14",
+    "type": "comment",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Send Sensor Data over UDP",
+    "info": "You will need to view the endpoint from the\nClimate UDP-IN node in the Data flow (see the\nEndpoints tab below) and use it to configure\nthe Climate UDP-OUT node here.",
+    "x": 138.51040649414062,
+    "y": 254.89237213134766,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "299407c7.2c9fd8",
+    "type": "http in",
+    "z": "2a0a0053.68754",
+    "name": "Command",
+    "url": "/command",
+    "method": "post",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 95.08671569824219,
+    "y": 253.09378814697266,
+    "wires": [
+      [
+        "38bc3879.61b188",
+        "2fa8e6bc.8b8cba"
+      ]
+    ]
+  },
+  {
+    "id": "38bc3879.61b188",
+    "type": "http response",
+    "z": "2a0a0053.68754",
+    "name": "",
+    "x": 182.09019470214844,
+    "y": 303.2916946411133,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "2fa8e6bc.8b8cba",
+    "type": "function",
+    "z": "2a0a0053.68754",
+    "name": "register commands",
+    "func": "global.set(\"command:\"+msg.payload.serial,msg.payload.command);\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 557.0901947021484,
+    "y": 251.0972671508789,
+    "wires": [
+      [
+        "c412ffa0.1b476"
+      ]
+    ]
+  },
+  {
+    "id": "c412ffa0.1b476",
+    "type": "debug",
+    "z": "2a0a0053.68754",
+    "name": "command",
+    "active": false,
+    "console": "false",
+    "complete": "payload",
+    "x": 800.1006011962891,
+    "y": 202.09033966064453,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "c2417aaa.6f2138",
+    "type": "http in",
+    "z": "2a0a0053.68754",
+    "name": "Trigger",
+    "url": "/trigger",
+    "method": "post",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 97.51034545898438,
+    "y": 90.8923568725586,
+    "wires": [
+      [
+        "4a06064b.3c6208"
+      ]
+    ]
+  },
+  {
+    "id": "d929257a.871588",
+    "type": "comment",
+    "z": "2a0a0053.68754",
+    "name": "Listen for Trigger",
+    "info": "",
+    "x": 99.09375,
+    "y": 36.09722137451172,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "621775fe.ef09fc",
+    "type": "comment",
+    "z": "2a0a0053.68754",
+    "name": "Listen for Commands for Devices",
+    "info": "",
+    "x": 133.5103759765625,
+    "y": 198.89238739013672,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "4a06064b.3c6208",
+    "type": "switch",
+    "z": "2a0a0053.68754",
+    "name": "Fired or Reset?",
+    "property": "payload.event",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "fired",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "reset",
+        "vt": "str"
+      }
+    ],
+    "checkall": "false",
+    "outputs": 2,
+    "x": 253.09375,
+    "y": 91.09722137451172,
+    "wires": [
+      [
+        "5a5de2da.79570c"
+      ],
+      [
+        "9ede3d82.d8cde"
+      ]
+    ]
+  },
+  {
+    "id": "b13fcd55.36559",
+    "type": "delay",
+    "z": "dca3a3aa.29d59",
+    "name": "",
+    "pauseType": "delay",
+    "timeout": "4",
+    "timeoutUnits": "seconds",
+    "rate": "1",
+    "rateUnits": "second",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "drop": false,
+    "x": 170.09375,
+    "y": 511.5277557373047,
+    "wires": [
+      [
+        "4a44b145.a7dd8",
+        "164466a7.6cab49"
+      ]
+    ]
+  },
+  {
+    "id": "4a44b145.a7dd8",
+    "type": "function",
+    "z": "dca3a3aa.29d59",
+    "name": "Set up Hot Temp Trigger",
+    "func": "//msg.action = \"createTrigger\";\nmsg.url += \"triggers\";\n\nmsg.payload = {\n    \"name\": \"Hot Temp\",\n    \"conditions\": {\n        \"temp\": { \"gt\": 30, \"reset\": 28 },\n        \"humidity\": { \"changed\": true }\n    },\n    \"frequency\": \"single\",\n    \"timeframe\": 30,\n    \"callback_url\": global.get(\"Trigger\"),\n    \"status\": \"enabled\",\n    \"notify_on_reset\": true,\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 390.5104064941406,
+    "y": 483.33677673339844,
+    "wires": [
+      [
+        "c70fd3ed.97f8b"
+      ]
+    ]
+  },
+  {
+    "id": "164466a7.6cab49",
+    "type": "function",
+    "z": "dca3a3aa.29d59",
+    "name": "Set up Cold Temp Trigger",
+    "func": "msg.url += \"triggers\";\n\nmsg.payload = {\n    \"name\": \"Cold Temp\",\n    \"conditions\": {\n        \"temp\": { \"lt\": 21, \"reset\": 24 }\n    },\n    \"frequency\": \"single\",\n    \"callback_url\": global.get(\"Trigger\"),\n    \"status\": \"enabled\",\n    \"notify_on_reset\": true,\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 388.5104064941406,
+    "y": 530.5590057373047,
+    "wires": [
+      [
+        "c70fd3ed.97f8b"
+      ]
+    ]
+  },
+  {
+    "id": "80cd54ad.8733b8",
+    "type": "function",
+    "z": "2a0a0053.68754",
+    "name": "Hot to Red",
+    "func": "msg.command = \"LED:red\";\nreturn msg;\n",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 626.5103759765625,
+    "y": 29.892356872558594,
+    "wires": [
+      [
+        "fcf99d53.6b24d"
+      ]
+    ]
+  },
+  {
+    "id": "e6d332de.b8662",
+    "type": "function",
+    "z": "2a0a0053.68754",
+    "name": "Cold to Blue",
+    "func": "msg.command = \"LED:red\";\nreturn msg;\n",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 625.5103759765625,
+    "y": 69.8923568725586,
+    "wires": [
+      [
+        "fcf99d53.6b24d"
+      ]
+    ]
+  },
+  {
+    "id": "9ede3d82.d8cde",
+    "type": "function",
+    "z": "2a0a0053.68754",
+    "name": "Otherwise Clear",
+    "func": "msg.command = \"LED:off\";\nreturn msg;\n",
+    "outputs": "1",
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 622.5103759765625,
+    "y": 126.89238739013672,
+    "wires": [
+      [
+        "fcf99d53.6b24d"
+      ]
+    ]
+  },
+  {
+    "id": "5a5de2da.79570c",
+    "type": "switch",
+    "z": "2a0a0053.68754",
+    "name": "Fired: Which Trigger?",
+    "property": "payload.trigger",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "Hot Temp",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "Cold Temp",
+        "vt": "str"
+      },
+      {
+        "t": "else"
+      }
+    ],
+    "checkall": "false",
+    "outputs": 3,
+    "x": 421.5104064941406,
+    "y": 37.892364501953125,
+    "wires": [
+      [
+        "80cd54ad.8733b8"
+      ],
+      [
+        "e6d332de.b8662"
+      ],
+      [
+        "9ede3d82.d8cde"
+      ]
+    ]
+  },
+  {
+    "id": "fcf99d53.6b24d",
+    "type": "function",
+    "z": "2a0a0053.68754",
+    "name": "Command URL",
+    "func": "msg.url = global.get(\"Command\");\nmsg.method = \"post\";\nmsg.payload = {\n    \"serial\": msg.payload.device.serial || \"serial\",\n    \"deviceID\": msg.payload.device.id,\n    \"command\" : msg.command\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 837.5103759765625,
+    "y": 97.8923568725586,
+    "wires": [
+      [
+        "14c37b0f.a9a4c5",
+        "2fa8e6bc.8b8cba"
+      ]
+    ]
+  },
+  {
+    "id": "14c37b0f.a9a4c5",
+    "type": "debug",
+    "z": "2a0a0053.68754",
+    "name": "trigger command request",
+    "active": false,
+    "console": "false",
+    "complete": "payload",
+    "x": 1078.1979675292969,
+    "y": 99.09026718139648,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "6ae171.a485be9",
+    "type": "inject",
+    "z": "ff4604e.3bd1ef8",
+    "name": "manual values - hot",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 113.51040649414062,
+    "y": 194.89236450195312,
+    "wires": [
+      [
+        "b7981d2e.08c42"
+      ]
+    ]
+  },
+  {
+    "id": "b7981d2e.08c42",
+    "type": "function",
+    "z": "ff4604e.3bd1ef8",
+    "name": "trigget hot",
+    "func": "global.set(\"temp\",33); // celcius\nglobal.set(\"humidity\",85);\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 325.5034637451172,
+    "y": 205.1771011352539,
+    "wires": [
+      [
+        "51647013.cc8ca"
+      ]
+    ]
+  },
+  {
+    "id": "18fefb4.d928a05",
+    "type": "http in",
+    "z": "2a0a0053.68754",
+    "name": "Poll",
+    "url": "/poll",
+    "method": "get",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 99.5103759765625,
+    "y": 432.8923873901367,
+    "wires": [
+      [
+        "1a5c2ca5.80c0f3",
+        "8753b1c5.919f6"
+      ]
+    ]
+  },
+  {
+    "id": "3f9fc54b.d75efa",
+    "type": "comment",
+    "z": "2a0a0053.68754",
+    "name": "Listen for Device Polling",
+    "info": "now keyed off serial rather than deviceID",
+    "x": 112.93403625488281,
+    "y": 379.6909866333008,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "1db7ebbe.147f44",
+    "type": "inject",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Automatic Command Check",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 130.08680725097656,
+    "y": 508.9826202392578,
+    "wires": [
+      [
+        "6767175b.2cdf98"
+      ]
+    ]
+  },
+  {
+    "id": "d797320c.7b332",
+    "type": "comment",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Retrieve waiting commands",
+    "info": "",
+    "x": 133.08680725097656,
+    "y": 461.59374237060547,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "6767175b.2cdf98",
+    "type": "function",
+    "z": "ff4604e.3bd1ef8",
+    "name": "Set URL",
+    "func": "msg.url = global.get(\"Poll\") + \"?deviceID=\"+global.get(\"deviceID\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 340.5104064941406,
+    "y": 508.55894470214844,
+    "wires": [
+      [
+        "337c154e.6dc26a"
+      ]
+    ]
+  },
+  {
+    "id": "337c154e.6dc26a",
+    "type": "http request",
+    "z": "ff4604e.3bd1ef8",
+    "name": "",
+    "method": "GET",
+    "ret": "txt",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 519.1007080078125,
+    "y": 508.58677673339844,
+    "wires": [
+      [
+        "e0107023.2365b"
+      ]
+    ]
+  },
+  {
+    "id": "e0107023.2365b",
+    "type": "debug",
+    "z": "ff4604e.3bd1ef8",
+    "name": "polled command",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 718.0937805175781,
+    "y": 512.9792175292969,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "1a5c2ca5.80c0f3",
+    "type": "debug",
+    "z": "2a0a0053.68754",
+    "name": "",
+    "active": false,
+    "console": "false",
+    "complete": "req.query",
+    "x": 352.09375,
+    "y": 355.64584634922187,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "c25b483b.073eb8",
+    "type": "function",
+    "z": "d012b668.0e6b48",
+    "name": "Data to Send",
+    "func": "var maxTemp = 60.0;\nvar minTemp = -10.0;\nvar maxHumid = 100.0;\nvar minHumid = 0.0;\n\nvar initTemp = 41.0;\nvar initHumid = 85.0;\n\nvar randTemp = 100;\nvar randHumid = 100;\n\nvar temp = global.get(\"temp\") || initTemp;\nvar humidity = global.get(\"humidity\") || initHumid;\n\nvar tempAdj = Math.floor((Math.random() * randTemp) -  (randTemp/2))/ randTemp;\nvar humidAdj = Math.floor((Math.random() * randHumid) - (randHumid/2))/randHumid;\n\ntemp += tempAdj;\nhumidity += humidAdj;\n\nif(temp > maxTemp)\n    temp = maxTemp;\nelse if(temp < minTemp)\n    temp = minTemp;\n    \nif(humidity > maxHumid)\n    humidity = maxHumid;\nelse if(humidity < minHumid)\n    humidity = minHumid;\n    \ntemp = Math.round(temp*100)/100;\nhumidity = Math.round(humidity*100)/100;\n\nglobal.set(\"temp\",temp);\nglobal.set(\"humidity\",humidity);\n\nvar timestamp = msg.payload;\n\nmsg.payload = {};\n//msg.payload.deviceID = msg.payload.deviceID || global.get(\"deviceID\");\nmsg.payload.serial = msg.payload.serial || global.get(\"serial\");\nmsg.payload.temp = temp;\nmsg.payload.humidity = humidity;\nmsg.payload.timestamp = timestamp;\n\nmsg.url = global.get(\"Climate\");\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": "changed",
+    "x": 251.51040649414062,
+    "y": 100.8923568725586,
+    "wires": [
+      [
+
+      ]
+    ]
+  },
+  {
+    "id": "454be092.6012d",
+    "type": "http in",
+    "z": "828b2334.7d74e",
+    "name": "Climate GET",
+    "url": "/climate",
+    "method": "get",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 108.10069274902344,
+    "y": 346.09725189208984,
+    "wires": [
+      [
+        "aadd913e.ba58b8",
+        "cb554451.c15e18"
+      ]
+    ]
+  },
+  {
+    "id": "51647013.cc8ca",
+    "type": "subflow:d012b668.0e6b48",
+    "z": "ff4604e.3bd1ef8",
+    "x": 334.2166748046875,
+    "y": 98.80000305175781,
+    "wires": [
+      [
+        "73b3da71.6cece4",
+        "6d95028b.1a51c4"
+      ]
+    ]
+  },
+  {
+    "id": "f4746521.9c739",
+    "type": "subflow:d012b668.0e6b48",
+    "z": "ff4604e.3bd1ef8",
+    "x": 296.21665954589844,
+    "y": 302.8000030517578,
+    "wires": [
+      [
+        "c43b3b87.c778c8"
+      ]
+    ]
+  },
+  {
+    "id": "c43b3b87.c778c8",
+    "type": "function",
+    "z": "ff4604e.3bd1ef8",
+    "name": "UDP addr",
+    "func": "msg.ip = global.get(\"ClimateUDP_IP\");\nmsg.port = global.get(\"ClimateUDP_Port\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 469.1999816894531,
+    "y": 299.8000183105469,
+    "wires": [
+      [
+        "65a39d98.998ae4"
+      ]
+    ]
+  },
+  {
+    "id": "6d95028b.1a51c4",
+    "type": "debug",
+    "z": "ff4604e.3bd1ef8",
+    "name": "http sending",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 531.61669921875,
+    "y": 171.1999969482422,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "b21405df.00f8a8",
+    "type": "function",
+    "z": "dca3a3aa.29d59",
+    "name": "M2X lead-in",
+    "func": "msg.headers = {\n    \"X-M2X-KEY\": global.get(\"M2X-Key\"),\n    \"content-type\": \"application/json\"\n};\n\n// clean input\nvar data = msg.payload;\nmsg.payload = {\n    \"name\" : data.name || \"\",\n    \"description\" : data.description || \"\",\n    \"tags\" : data.tags || \"\",\n    \"visibility\" : data.visibility,\n    \"serial\": data.serial || global.get(\"defaultserial\")\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 345.34027099609375,
+    "y": 91.89236450195312,
+    "wires": [
+      [
+        "95df9407.f4a3c8",
+        "f459885c.328a18"
+      ]
+    ]
+  },
+  {
+    "id": "f459885c.328a18",
+    "type": "http request",
+    "z": "dca3a3aa.29d59",
+    "name": "M2X POST",
+    "method": "POST",
+    "ret": "obj",
+    "url": "https://api-m2x.att.com/v2/devices",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 538.2291870117188,
+    "y": 92.70833587646484,
+    "wires": [
+      [
+        "ab48f57b.a54148",
+        "ff94ed1a.b9a14"
+      ]
+    ]
+  },
+  {
+    "id": "ab48f57b.a54148",
+    "type": "debug",
+    "z": "dca3a3aa.29d59",
+    "name": "m2x post",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 709.3402709960938,
+    "y": 39.892364501953125,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "bed41f26.76a9c",
+    "type": "http request",
+    "z": "dca3a3aa.29d59",
+    "name": "M2X PUT",
+    "method": "PUT",
+    "ret": "obj",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 661.2291717529297,
+    "y": 377.48612213134766,
+    "wires": [
+      [
+        "db884774.bea118"
+      ]
+    ]
+  },
+  {
+    "id": "c70fd3ed.97f8b",
+    "type": "http request",
+    "z": "dca3a3aa.29d59",
+    "name": "M2X POST",
+    "method": "POST",
+    "ret": "obj",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 650.3402709960938,
+    "y": 486.00347900390625,
+    "wires": [
+      [
+        "db884774.bea118"
+      ]
+    ]
+  },
+  {
+    "id": "d28b3f50.a99a8",
+    "type": "http request",
+    "z": "828b2334.7d74e",
+    "name": "M2X POST",
+    "method": "POST",
+    "ret": "obj",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 886.7847595214844,
+    "y": 306.33679962158203,
+    "wires": [
+      [
+        "4cb8e2ed.d6c6cc",
+        "231483a9.45ec5c",
+        "64da0594.fbe99c"
+      ]
+    ]
+  },
+  {
+    "id": "a01aa52c.07bff8",
+    "type": "inject",
+    "z": "edd8f490.1384b8",
+    "name": "",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 172.23263549804688,
+    "y": 124.62152862548828,
+    "wires": [
+      [
+        "c61bcbec.6f72e8"
+      ]
+    ]
+  },
+  {
+    "id": "c61bcbec.6f72e8",
+    "type": "function",
+    "z": "edd8f490.1384b8",
+    "name": "",
+    "func": "msg.topic = \"devices\";\nmsg.action = \"postMultiple\";\nmsg.topic_id = \"473c945a2585d3710d863ac6d1b62b19\";\nmsg.payload = {\n    \"temp\": [\n        {\"timestamp\": new Date(msg.payload).toISOString(), \"value\": 34 }]\n};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 368.2395935058594,
+    "y": 124.0138931274414,
+    "wires": [
+      [
+        "42376eb6.c6da8"
+      ]
+    ]
+  },
+  {
+    "id": "42376eb6.c6da8",
+    "type": "m2x",
+    "z": "edd8f490.1384b8",
+    "feed": "fa6df2fa.69e0b",
+    "name": "",
+    "x": 554.2430419921875,
+    "y": 124.75000762939453,
+    "wires": [
+      [
+        "673796e3.081c48"
+      ]
+    ]
+  },
+  {
+    "id": "673796e3.081c48",
+    "type": "debug",
+    "z": "edd8f490.1384b8",
+    "name": "",
+    "active": true,
+    "console": "false",
+    "complete": "false",
+    "x": 740.2291564941406,
+    "y": 124.08333587646484,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "1dd5b3a7.33d53c",
+    "type": "http in",
+    "z": "edd8f490.1384b8",
+    "name": "Alert",
+    "url": "/alert",
+    "method": "post",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 166.24305725097656,
+    "y": 210.09029388427734,
+    "wires": [
+      [
+        "b9b8ac06.e6ce3",
+        "692f65a9.84137c"
+      ]
+    ]
+  },
+  {
+    "id": "b9b8ac06.e6ce3",
+    "type": "debug",
+    "z": "edd8f490.1384b8",
+    "name": "",
+    "active": true,
+    "console": "false",
+    "complete": "false",
+    "x": 355.2361145019531,
+    "y": 208.09375762939453,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "313707d8.e8d6f8",
+    "type": "http in",
+    "z": "828b2334.7d74e",
+    "name": "get deviceID",
+    "url": "/deviceID",
+    "method": "get",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 84.49307250976562,
+    "y": 679.9757480621338,
+    "wires": [
+      [
+        "cdb3da18.b15738"
+      ]
+    ]
+  },
+  {
+    "id": "eb3a5879.8d36b8",
+    "type": "comment",
+    "z": "828b2334.7d74e",
+    "name": "Get deviceID by Serial",
+    "info": "",
+    "x": 112.48959350585938,
+    "y": 629.7604007720947,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "bd8e6d79.7fb89",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "extract deviceID",
+    "func": "msg.payload = msg.payload.id;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 571.6042022705078,
+    "y": 680.3194370269775,
+    "wires": [
+      [
+        "c43445c2.ce15a8"
+      ]
+    ]
+  },
+  {
+    "id": "e3421078.f0c8f",
+    "type": "http in",
+    "z": "828b2334.7d74e",
+    "name": "get serial",
+    "url": "/serial",
+    "method": "get",
+    "configKey": "",
+    "authType": "noAuth",
+    "useAuth": false,
+    "useOauth": false,
+    "encryption": "none",
+    "realm": "",
+    "site": "",
+    "authorizationPath": "/oauth/authorize",
+    "tokenPath": "/oauth/access_token",
+    "scope": "",
+    "encryptObj": [
+      "username",
+      "password",
+      "clientId",
+      "clientSecret"
+    ],
+    "swaggerDoc": "",
+    "x": 88.59028625488281,
+    "y": 797.0034275054932,
+    "wires": [
+      [
+        "18072ad3.f0ab95"
+      ]
+    ]
+  },
+  {
+    "id": "7299087e.c63068",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "m2x response",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 500.9097442626953,
+    "y": 738.5868320465088,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "57d0b31f.3d11ac",
+    "type": "comment",
+    "z": "828b2334.7d74e",
+    "name": "Get serial by deviceID",
+    "info": "",
+    "x": 114.58680725097656,
+    "y": 737.7880954742432,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "c43445c2.ce15a8",
+    "type": "http response",
+    "z": "828b2334.7d74e",
+    "name": "",
+    "x": 797.5834503173828,
+    "y": 736.9756870269775,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "e85cf4fe.0246e8",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "extract serial",
+    "func": "msg.payload = msg.payload.serial;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 567.7014312744141,
+    "y": 792.347146987915,
+    "wires": [
+      [
+        "c43445c2.ce15a8"
+      ]
+    ]
+  },
+  {
+    "id": "231483a9.45ec5c",
+    "type": "http response",
+    "z": "828b2334.7d74e",
+    "name": "",
+    "x": 1069.7847595214844,
+    "y": 311.28822326660156,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "8832b00b.f292c",
+    "type": "function",
+    "z": "d6754866.b25de8",
+    "name": "M2X lead-in",
+    "func": "msg.url = \"https://api-m2x.att.com/v2/devices/\";\nif(msg.payload.deviceID !== undefined && msg.payload.deviceID !== \"\")\n{\n    msg.url += msg.payload.deviceID;\n} else {\n    msg.url += \"serial/\" + msg.payload.serial || global.get(\"serial\");\n}\n\nmsg.headers = {\n    \"X-M2X-KEY\": global.get(\"M2X-Key\"),\n    \"content-type\": \"application/json\"\n};\n\nmsg.payload = {};\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 221.34027099609375,
+    "y": 133.89236450195307,
+    "wires": [
+      [
+        "cc5fe5ce.a7b318"
+      ]
+    ]
+  },
+  {
+    "id": "cc5fe5ce.a7b318",
+    "type": "http request",
+    "z": "d6754866.b25de8",
+    "name": "M2X GET",
+    "method": "GET",
+    "ret": "txt",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 381.23614501953125,
+    "y": 134.69442749023432,
+    "wires": [
+      [
+        "abbf1662.c240f8"
+      ]
+    ]
+  },
+  {
+    "id": "abbf1662.c240f8",
+    "type": "json",
+    "z": "d6754866.b25de8",
+    "name": "",
+    "x": 544.2431030273438,
+    "y": 134.09713745117182,
+    "wires": [
+      [
+
+      ]
+    ]
+  },
+  {
+    "id": "cdb3da18.b15738",
+    "type": "subflow:d6754866.b25de8",
+    "z": "828b2334.7d74e",
+    "x": 297.48268127441406,
+    "y": 679.6423740386963,
+    "wires": [
+      [
+        "bd8e6d79.7fb89",
+        "7299087e.c63068"
+      ]
+    ]
+  },
+  {
+    "id": "18072ad3.f0ab95",
+    "type": "subflow:d6754866.b25de8",
+    "z": "828b2334.7d74e",
+    "x": 303.4861297607422,
+    "y": 792.5277500152588,
+    "wires": [
+      [
+        "7299087e.c63068",
+        "e85cf4fe.0246e8"
+      ]
+    ]
+  },
+  {
+    "id": "692f65a9.84137c",
+    "type": "http response",
+    "z": "edd8f490.1384b8",
+    "name": "",
+    "x": 351.1007080078125,
+    "y": 257.2778091430664,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "d5b80e23.d7aec",
+    "type": "function",
+    "z": "3a19c365.ec522c",
+    "name": "Set Registered",
+    "func": "msg.payload.registered = false;\nvar deviceID = msg.payload.deviceID;\n\nif(deviceID === undefined || deviceID === \"\")\n{\n    var serial = msg.payload.serial || global.get(\"serial\");\n    if(serial)\n    {\n        deviceID = global.get(\"dict:deviceID\"+msg.payload.serial);\n        msg.payload.deviceID = deviceID;\n    }\n}\n//msg.payload.registered = global.get(\"registered:\"+deviceID) || false;\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 186.55909729003906,
+    "y": 77.55208587646484,
+    "wires": [
+      [
+        "f3ee5b81.0e4cc8"
+      ]
+    ]
+  },
+  {
+    "id": "f3ee5b81.0e4cc8",
+    "type": "switch",
+    "z": "3a19c365.ec522c",
+    "name": "Registered?",
+    "property": "payload.registered",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "true"
+      },
+      {
+        "t": "false"
+      }
+    ],
+    "checkall": "true",
+    "outputs": 2,
+    "x": 368.55906677246094,
+    "y": 78.55554962158203,
+    "wires": [
+      [
+
+      ],
+      [
+        "aafe8d98.1fd0a"
+      ]
+    ]
+  },
+  {
+    "id": "8e24cb25.9cac48",
+    "type": "http request",
+    "z": "3a19c365.ec522c",
+    "name": "POST",
+    "method": "POST",
+    "ret": "txt",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 751.5624237060547,
+    "y": 267.4756851196289,
+    "wires": [
+      [
+        "259d311c.16b58e"
+      ]
+    ]
+  },
+  {
+    "id": "c6807f62.949fb",
+    "type": "function",
+    "z": "3a19c365.ec522c",
+    "name": "Data to Register",
+    "func": "msg.payload = {\n    \"name\": msg.oldpayload.name || \"New Device\",\n    \"description\": msg.oldpayload.description || \"\",\n    \"tags\": msg.oldpayload.tags || \"\",\n    \"visibility\": msg.oldpayload.visibility || \"Private\",\n    \"metadata\": {},\n    \"serial\": msg.payload.serial\n}\nmsg.url = global.get(\"Register\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 558.5555267333984,
+    "y": 290.6944351196289,
+    "wires": [
+      [
+        "8e24cb25.9cac48"
+      ]
+    ]
+  },
+  {
+    "id": "259d311c.16b58e",
+    "type": "function",
+    "z": "3a19c365.ec522c",
+    "name": "Resume",
+    "func": "// assume it worked for now\nvar deviceID = msg.payload.id;\nmsg.payload = msg.oldpayload;\nmsg.payload.deviceID = deviceID;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 896.3367767333984,
+    "y": 220.56598663330078,
+    "wires": [
+      [
+
+      ]
+    ]
+  },
+  {
+    "id": "aafe8d98.1fd0a",
+    "type": "switch",
+    "z": "3a19c365.ec522c",
+    "name": "Serial?",
+    "property": "payload.serial",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "nnull"
+      },
+      {
+        "t": "else"
+      }
+    ],
+    "checkall": "true",
+    "outputs": 2,
+    "x": 168.99998474121094,
+    "y": 161.3611068725586,
+    "wires": [
+      [
+        "e3b4f1cc.6a3b9"
+      ],
+      [
+
+      ]
+    ]
+  },
+  {
+    "id": "47010289.9e4aac",
+    "type": "subflow:d6754866.b25de8",
+    "z": "3a19c365.ec522c",
+    "x": 567.7778167724609,
+    "y": 164.58338165283203,
+    "wires": [
+      [
+        "d064c7be.3de7f8"
+      ]
+    ]
+  },
+  {
+    "id": "e3b4f1cc.6a3b9",
+    "type": "function",
+    "z": "3a19c365.ec522c",
+    "name": "store payload",
+    "func": "msg.oldpayload = msg.payload;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 384.06944274902344,
+    "y": 165.08683013916016,
+    "wires": [
+      [
+        "47010289.9e4aac"
+      ]
+    ]
+  },
+  {
+    "id": "d064c7be.3de7f8",
+    "type": "function",
+    "z": "3a19c365.ec522c",
+    "name": "Found?",
+    "func": "var msg2 = msg;\nif(msg.statusCode != 400 && msg.statusCode != 404)\n{\n    // already registered\n    var serial = msg.payload.serial;\n    var deviceID = msg.payload.deviceID;\n    msg.payload = msg.oldpayload;\n    msg.payload.serial = serial;\n    msg.payload.deviceID = deviceID;\n    msg2 = null;\n} else {\n    // device not found, register it\n    msg2.payload.serial = msg.oldpayload.serial || null;\n    msg2.payload.deviceID = msg.oldpayload.deviceID || null;\n    msg = null;\n}\n\nreturn [msg, msg2];",
+    "outputs": "2",
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 368.0659942626953,
+    "y": 252.08683013916016,
+    "wires": [
+      [
+
+      ],
+      [
+        "c6807f62.949fb"
+      ]
+    ]
+  },
+  {
+    "id": "107524d4.341c0b",
+    "type": "comment",
+    "z": "3a19c365.ec522c",
+    "name": "no serial, can't register",
+    "info": "",
+    "x": 143.0625,
+    "y": 244.08683013916016,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "caa0c290.3073a",
+    "type": "comment",
+    "z": "3a19c365.ec522c",
+    "name": "not yet working",
+    "info": "",
+    "x": 620.0625152587891,
+    "y": 21.09722137451172,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "5f25e949.1d1d98",
+    "type": "inject",
+    "z": "828b2334.7d74e",
+    "name": "CC Device Details",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 111.5625,
+    "y": 929.0554943084717,
+    "wires": [
+      [
+        "8e754ba5.8b6ec8"
+      ]
+    ]
+  },
+  {
+    "id": "963e20df.e179c",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "CC lead-in - Device",
+    "func": "msg.url = global.get(\"CCBaseURL\") + \"devices/\" + global.get(\"ICCID\");\n\nmsg.headers = {\n    \"Accept\": \"application/json\",\n    \"Authorization\": \"Basic \" + msg.payload\n}\n\nmsg.payload = {};\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 557.562385559082,
+    "y": 929.6249656677246,
+    "wires": [
+      [
+        "313fab82.a24194"
+      ]
+    ]
+  },
+  {
+    "id": "c18da1fb.f7c36",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "Control Center",
+    "active": true,
+    "console": "true",
+    "complete": "payload",
+    "x": 1170.0696105957031,
+    "y": 1061.058853149414,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "de6523d9.62be6",
+    "type": "comment",
+    "z": "828b2334.7d74e",
+    "name": "Control Center REST API",
+    "info": "You will need to configure the Congifugration\nnode with your Control Center credentials to\nuse these functions.\n\nIn their current form they simply use an inject\nnode, but you can modify them to be web services\nor interact with your device any way you want.",
+    "x": 123.56596374511719,
+    "y": 870.9443950653076,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "cfcc5365.d1f0a",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "CC lead-in - Usage",
+    "func": "msg.url = global.get(\"CCBaseURL\") + \"devices/\" + global.get(\"ICCID\") + \"/ctdUsages\";\n\nmsg.headers = {\n    \"Accept\": \"application/json\",\n    \"Authorization\": \"Basic \" + msg.payload\n}\n\nmsg.payload = {};\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 561.4582214355469,
+    "y": 984.6779899597168,
+    "wires": [
+      [
+        "313fab82.a24194"
+      ]
+    ]
+  },
+  {
+    "id": "313fab82.a24194",
+    "type": "http request",
+    "z": "828b2334.7d74e",
+    "name": "GET",
+    "method": "GET",
+    "ret": "obj",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 769.9582824707031,
+    "y": 984.0250663757324,
+    "wires": [
+      [
+        "61fb2be.4748fd4",
+        "aea76f7b.dcec"
+      ]
+    ]
+  },
+  {
+    "id": "61fb2be.4748fd4",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "extra device info",
+    "func": "var data = {\n    \"ICCID\": msg.payload.iccid\n}\n\nif(msg.payload.imsi !== undefined)\n{\n    data.IMSI = msg.payload.imsi;\n}\nif(msg.payload.imei !== undefined)\n{\n    data.IMEI = msg.payload.imei;\n}\nif(msg.payload.status !== undefined)\n{\n    data.Status = msg.payload.status;\n}\nif(msg.payload.accountId !== undefined)\n{\n    data.AccountID = msg.payload.accountId;\n}\nif(msg.payload.dateActivated !== undefined)\n{\n    data.DateActivated = msg.payload.dateActivated;\n}\nif(msg.payload.dateUpdated !== undefined)\n{\n    data.DateUpdated = msg.payload.dateUpdated;\n}\nif(msg.payload.ratePlan !== undefined)\n{\n    data.RatePlan = msg.payload.ratePlan;\n}\nif(msg.payload.communicationPlan !== undefined)\n{\n    data.CommunicationPlan = msg.payload.communicationPlan;\n}\n\nif(msg.payload.ctdDataUsage !== undefined)\n{\n    data.CTDDataUsage = msg.payload.ctdDataUsage;\n}\nif(msg.payload.ctdSMSUsage !== undefined)\n{\n    data.CTDSMSUsage = msg.payload.ctdSMSUsage;\n}\nif(msg.payload.ctdSessionCount !== undefined)\n{\n    data.CTDSessionCount = msg.payload.ctdSessionCount;\n}\nif(msg.payload.overageLimitReached !== undefined)\n{\n    data.OverageLimitReached = msg.payload.overageLimitReached;\n}\n\nif(msg.payload.lastSessionStartTime !== undefined)\n{\n    data.LastSessionStartTime = msg.payload.lastSessionStartTime;\n}\nif(msg.payload.lastSessionEndTime !== undefined)\n{\n    data.LastSessionEndTime = msg.payload.lastSessionEndTime;\n}\nif(msg.payload.dateSessionStarted !== undefined)\n{\n    data.DateSessionStarted = msg.payload.dateSessionStarted;\n}\nif(msg.payload.dateSessionEnded !== undefined)\n{\n    data.DateSessionEnded = msg.payload.dateSessionEnded;\n}\nif(msg.payload.ipAddress !== undefined)\n{\n    data.IPAddress = msg.payload.ipAddress;\n}\n\nmsg.payload = data;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 981.9618263244629,
+    "y": 983.8063774108887,
+    "wires": [
+      [
+        "c18da1fb.f7c36"
+      ]
+    ]
+  },
+  {
+    "id": "47baab0c.083f24",
+    "type": "inject",
+    "z": "828b2334.7d74e",
+    "name": "CC Device Usage",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 112.45137786865234,
+    "y": 985.5320863723755,
+    "wires": [
+      [
+        "6eedb370.39d6bc"
+      ]
+    ]
+  },
+  {
+    "id": "4b18b3ac.850bac",
+    "type": "inject",
+    "z": "828b2334.7d74e",
+    "name": "CC Session Info",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 113.70138549804688,
+    "y": 1042.4765300750732,
+    "wires": [
+      [
+        "dc3e77fb.cb9b98"
+      ]
+    ]
+  },
+  {
+    "id": "ca8632de.f60b6",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "CC lead-in - Session",
+    "func": "msg.url = global.get(\"CCBaseURL\") + \"devices/\" + global.get(\"ICCID\") + \"/sessionInfo\";\n\nmsg.headers = {\n    \"Accept\": \"application/json\",\n    \"Authorization\": \"Basic \" + msg.payload\n}\n\nmsg.payload = {};\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 556.458194732666,
+    "y": 1041.622465133667,
+    "wires": [
+      [
+        "313fab82.a24194"
+      ]
+    ]
+  },
+  {
+    "id": "5fc7b6a7.ad5a48",
+    "type": "function",
+    "z": "146e5987.6ab216",
+    "name": "CC User:Key",
+    "func": "msg.payload = global.get(\"CCuser\") + \":\" + global.get(\"CCkey\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 246.7013702392578,
+    "y": 109.86544799804688,
+    "wires": [
+      [
+        "46f42f02.48344"
+      ]
+    ]
+  },
+  {
+    "id": "46f42f02.48344",
+    "type": "base64",
+    "z": "146e5987.6ab216",
+    "name": "",
+    "method": "",
+    "x": 409.9513702392578,
+    "y": 109.61897373199463,
+    "wires": [
+      [
+
+      ]
+    ]
+  },
+  {
+    "id": "8e754ba5.8b6ec8",
+    "type": "subflow:146e5987.6ab216",
+    "z": "828b2334.7d74e",
+    "x": 325.81946182250977,
+    "y": 927.3029157747459,
+    "wires": [
+      [
+        "963e20df.e179c"
+      ]
+    ]
+  },
+  {
+    "id": "6eedb370.39d6bc",
+    "type": "subflow:146e5987.6ab216",
+    "z": "828b2334.7d74e",
+    "x": 327.45135498046875,
+    "y": 986.2265291213989,
+    "wires": [
+      [
+        "cfcc5365.d1f0a"
+      ]
+    ]
+  },
+  {
+    "id": "dc3e77fb.cb9b98",
+    "type": "subflow:146e5987.6ab216",
+    "z": "828b2334.7d74e",
+    "x": 324.9513397216797,
+    "y": 1043.7265071868896,
+    "wires": [
+      [
+        "ca8632de.f60b6"
+      ]
+    ]
+  },
+  {
+    "id": "aea76f7b.dcec",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "Control Center",
+    "active": false,
+    "console": "true",
+    "complete": "payload",
+    "x": 914.9513702392578,
+    "y": 912.4765167236328,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "7e7eadc0.83a014",
+    "type": "http request",
+    "z": "828b2334.7d74e",
+    "name": "POST",
+    "method": "POST",
+    "ret": "obj",
+    "url": "",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 774.2569274902344,
+    "y": 1096.6701202392578,
+    "wires": [
+      [
+        "c18da1fb.f7c36"
+      ]
+    ]
+  },
+  {
+    "id": "cf264b48.bbc548",
+    "type": "function",
+    "z": "828b2334.7d74e",
+    "name": "CC lead-in - SMS",
+    "func": "msg.url = global.get(\"CCBaseURL\") + \"smsMessages\";\n\nmsg.headers = {\n    \"Accept\": \"application/json\",\n    \"Authorization\": \"Basic \" + msg.payload\n}\n\nmsg.payload = {\n    \"iccid\": global.get(\"ICCID\"),\n    \"message\": \"test SMS\"\n};\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 560.7568244934082,
+    "y": 1098.2675189971924,
+    "wires": [
+      [
+        "7e7eadc0.83a014"
+      ]
+    ]
+  },
+  {
+    "id": "548e62b3.1b076c",
+    "type": "subflow:146e5987.6ab216",
+    "z": "828b2334.7d74e",
+    "x": 329.2499694824219,
+    "y": 1100.371561050415,
+    "wires": [
+      [
+        "cf264b48.bbc548"
+      ]
+    ]
+  },
+  {
+    "id": "c7fa597c.bb0998",
+    "type": "inject",
+    "z": "828b2334.7d74e",
+    "name": "CC SMS",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "x": 118.00001525878906,
+    "y": 1099.1215839385986,
+    "wires": [
+      [
+        "548e62b3.1b076c"
+      ]
+    ]
+  },
+  {
+    "id": "32ecab27.b0d3e4",
+    "type": "tcp in",
+    "z": "828b2334.7d74e",
+    "name": "",
+    "server": "server",
+    "host": "",
+    "port": 4000,
+    "datamode": "stream",
+    "datatype": "buffer",
+    "newline": "",
+    "topic": "",
+    "base64": false,
+    "x": 103.45834350585938,
+    "y": 522.1736602783203,
+    "wires": [
+      [
+        "2c2773fd.e489dc"
+      ]
+    ]
+  },
+  {
+    "id": "aa964c3.e18ebb",
+    "type": "debug",
+    "z": "828b2334.7d74e",
+    "name": "tcp-in",
+    "active": false,
+    "console": "false",
+    "complete": "payload",
+    "x": 495.6944274902344,
+    "y": 523.7847290039062,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "64da0594.fbe99c",
+    "type": "json",
+    "z": "828b2334.7d74e",
+    "name": "",
+    "x": 991.4792175292966,
+    "y": 480.1805877685546,
+    "wires": [
+      [
+        "a709bb27.a52ad8"
+      ]
+    ]
+  },
+  {
+    "id": "a709bb27.a52ad8",
+    "type": "tcp out",
+    "z": "828b2334.7d74e",
+    "host": "",
+    "port": "",
+    "beserver": "reply",
+    "base64": false,
+    "end": false,
+    "name": "",
+    "x": 1161.4653625488281,
+    "y": 480.5625762939453,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "bda6b0b0.4ea2c",
+    "type": "function",
+    "z": "7ddfd805.46bfe8",
+    "name": "Parse input",
+    "func": "var data = msg.payload.split(\" \");\nif(data.length > 0)\n{\n    msg.payload = {};\n    data.forEach(function(reading) \n    {\n        var item = reading.split(\":\");\n        msg.payload[item[0]] = item[1].trim();\n    });\n    return msg;\n}",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 359.71913146972656,
+    "y": 130.10262298583984,
+    "wires": [
+      [
+
+      ]
+    ]
+  },
+  {
+    "id": "519c4cb.ab4c3b4",
+    "type": "tcp in",
+    "z": "2a0a0053.68754",
+    "name": "Poll",
+    "server": "server",
+    "host": "",
+    "port": 4001,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "newline": "\\n",
+    "topic": "",
+    "base64": false,
+    "x": 101.34721374511719,
+    "y": 504.11115646362305,
+    "wires": [
+      [
+        "ee4124ca.cac248"
+      ]
+    ]
+  },
+  {
+    "id": "ee4124ca.cac248",
+    "type": "subflow:7ddfd805.46bfe8",
+    "z": "2a0a0053.68754",
+    "x": 290.97689056396484,
+    "y": 504.3144931793213,
+    "wires": [
+      [
+        "db114ade.38ed58",
+        "8753b1c5.919f6"
+      ]
+    ]
+  },
+  {
+    "id": "db114ade.38ed58",
+    "type": "debug",
+    "z": "2a0a0053.68754",
+    "name": "tcp-in",
+    "active": true,
+    "console": "true",
+    "complete": "payload",
+    "x": 520.0208892822266,
+    "y": 503.2082920074463,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "8753b1c5.919f6",
+    "type": "function",
+    "z": "2a0a0053.68754",
+    "name": "retrieve commands",
+    "func": "var index = \"command:\"+msg.payload.serial;\n\nmsg.payload = global.get(index);\nglobal.set(index,\"\");\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 507.23606872558594,
+    "y": 428.4757471084595,
+    "wires": [
+      [
+        "8fe7f639.2df408",
+        "b1647828.a0cac8"
+      ]
+    ]
+  },
+  {
+    "id": "8fe7f639.2df408",
+    "type": "debug",
+    "z": "2a0a0053.68754",
+    "name": "polling",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 681.9963836669922,
+    "y": 375.3854579925537,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "b1647828.a0cac8",
+    "type": "switch",
+    "z": "2a0a0053.68754",
+    "name": "command to return?",
+    "property": "payload.length",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "null"
+      },
+      {
+        "t": "eq",
+        "v": "0",
+        "vt": "num"
+      },
+      {
+        "t": "else"
+      }
+    ],
+    "checkall": "false",
+    "outputs": 3,
+    "x": 754.5624160766602,
+    "y": 484.4687976837158,
+    "wires": [
+      [
+        "2836d564.ae3b8a"
+      ],
+      [
+        "2836d564.ae3b8a"
+      ],
+      [
+        "9ff36161.4e5b6",
+        "a2b7ef12.52252"
+      ]
+    ]
+  },
+  {
+    "id": "2836d564.ae3b8a",
+    "type": "function",
+    "z": "2a0a0053.68754",
+    "name": "no command",
+    "func": "msg.payload = \"none\";\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "dependencies": [
+
+    ],
+    "x": 916.4548416137695,
+    "y": 372.9167251586914,
+    "wires": [
+      [
+        "9ff36161.4e5b6",
+        "775c7e01.c03f",
+        "b61ecb1f.6d7c98"
+      ]
+    ]
+  },
+  {
+    "id": "775c7e01.c03f",
+    "type": "debug",
+    "z": "2a0a0053.68754",
+    "name": "no command",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 1140.9860610961914,
+    "y": 332.5000171661377,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "9ff36161.4e5b6",
+    "type": "http response",
+    "z": "2a0a0053.68754",
+    "name": "",
+    "x": 1139.985939025879,
+    "y": 417.9201831817627,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "a2b7ef12.52252",
+    "type": "debug",
+    "z": "2a0a0053.68754",
+    "name": "command",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 1144.9860610961914,
+    "y": 466.5000171661377,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "b61ecb1f.6d7c98",
+    "type": "tcp out",
+    "z": "2a0a0053.68754",
+    "host": "",
+    "port": "",
+    "beserver": "reply",
+    "base64": false,
+    "end": false,
+    "name": "",
+    "x": 1152.6195983886719,
+    "y": 514.7018585205078,
+    "wires": [
+
+    ]
+  },
+  {
+    "id": "2c2773fd.e489dc",
+    "type": "subflow:7ddfd805.46bfe8",
+    "z": "828b2334.7d74e",
+    "x": 301.7395935058594,
+    "y": 522.975715637207,
+    "wires": [
+      [
+        "aa964c3.e18ebb",
+        "aadd913e.ba58b8"
+      ]
+    ]
+  },
+  {
+    "id": "25497871.c15828",
+    "type": "http request",
+    "z": "828b2334.7d74e",
+    "name": "To Amir",
+    "method": "POST",
+    "ret": "obj",
+    "url": "http://prj1-flask.mybluemix.net/api/send2",
+    "configKey": "",
+    "useAuth": false,
+    "encryption": "none",
+    "useCertificate": false,
+    "decrypt": false,
+    "cert": "",
+    "key": "",
+    "encryptObj": [
+      "username",
+      "password"
+    ],
+    "x": 853.765625,
+    "y": 382,
+    "wires": [
+      [
+
+      ]
+    ]
+  }
+]
